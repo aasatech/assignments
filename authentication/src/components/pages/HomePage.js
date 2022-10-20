@@ -1,6 +1,6 @@
 function HomePage(){
     return (
-        <div className="mt-36 flex justify-center items-center">
+        <div className="flex justify-center items-center w-full h-screen">
             <img src={require('../../images/banner.png')} alt="loading..." className=''/>
         </div>
     )
