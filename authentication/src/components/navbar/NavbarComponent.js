@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 function Navigation() {
   return (
-    <div className="header fixed top-0 left-0 right-0 shadow-md px-5 py-2 bg-white flex justify-between z-8">
+    <div className="header fixed top-0 left-0 right-0 shadow-md p-5 bg-white flex justify-between z-8">
       <ul>
         <Link to={'/home'}>
           <li>Home</li>
