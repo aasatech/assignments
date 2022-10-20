@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function LoginPage() {
   return (
-    <div className="mt-36">
+    <div className="flex justify-center items-center w-full h-screen">
       <div className="shadow-green-900/80 rounded bg-gradient-to-b from-green-200/80 to-blue-500/20 shadow p-7 bg-white rounded-b w-1/3 m-auto">
         <h2 className="text-cyan-900 text-center mb-5 capitalize text-3xl font-bold">Login</h2>
         <div className="w-full">
