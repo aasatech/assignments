@@ -1,10 +1,35 @@
 import { useNavigate } from 'react-router-dom';
-
+import { useState } from 'react';
 function RegisterPage() {
+  const userForm = {
+    name: '',
+    userName: '',
+    email: '',
+    phone: '',
+    password: ''
+  }
   const navigate = useNavigate();
-
-  const onRegister = () => {
-    navigate(`/login`)
+  const [newUser, setNewUser] = useState(userForm);
+  const URL = 'https://learning.staging.aasatech.asia/api/v1/auth';
+  const onHandleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setNewUser((prev)=>{
+      return {...prev, [name]: value};
+    })
+  }
+  const onRegister = async () => {
+    navigate(`/login`);
+    let result = await fetch(URL, {
+      method: 'POST',
+      body: JSON.stringify(newUser),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
+    result = await result.json();
+    console.log(result);
   }
   return (
     <div className="flex justify-center items-center w-full h-screen">
@@ -18,6 +43,7 @@ function RegisterPage() {
               type="text"
               className="shadow appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline"
               placeholder="Name . . ."
+              onChange={onHandleChange}
             />
           </div>
           <div className="w-full mt-3">
@@ -27,6 +53,7 @@ function RegisterPage() {
               type="text"
               className="shadow appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline"
               placeholder="Username . . ."
+              onChange={onHandleChange}
             />
           </div>
           <div className="w-full mt-3">
@@ -42,9 +69,10 @@ function RegisterPage() {
             <label>Email</label>
             <input
               name="email"
-              type="password"
+              type="email"
               className="shadow appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline"
               placeholder="Email . . ."
+              onChange={onHandleChange}
             />
           </div>
           <div className="w-full mt-3">
@@ -54,6 +82,7 @@ function RegisterPage() {
               type="password"
               className="shadow appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline"
               placeholder="Password . . ."
+              onChange={onHandleChange}
             />
           </div>
           <div className="w-full flex justify-end mt-5">
