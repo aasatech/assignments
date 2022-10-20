@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function LoginPage() {
   return (
     <div className="mt-36">
@@ -31,7 +33,10 @@ function LoginPage() {
         </div>
         <div className="flex justify-end mt-2">
           <h3 className="text-blue-500">Don't have account?</h3>
-          <a className="ml-2 text-blue-500 font-bold underline cursor-pointer">Regester</a>
+          <Link to={`/register`}
+            className="ml-2 text-blue-500 font-bold underline cursor-pointer">
+            Regester
+          </Link>
         </div>
 
       </div>
