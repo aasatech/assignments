@@ -8,12 +8,14 @@ import { login } from '../../redux/reducers/userReducer';
 function LoginPage() {
   const salt = bcrypt.genSaltSync(10);
   const [userLogin, setUser] = useState({});
-  const [cookies, setCookie] = useCookies(['token']);
+  const [setCookie] = useCookies(['token']);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [isInValid, setInValid] = useState(false);
+  const [message, setMessage] = useState('');
   const URL = 'https://learning.staging.aasatech.asia/api/v1/auth/session';
-
+  const invalidClass = 'w-full px-4 py-2 border border-red-500 rounded outline-none';
+  const normalClass = 'shadow appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline';
   const onHandleChange = (e)=>{
     const name = e.target.name;
     const value = e.target.value;
@@ -34,7 +36,8 @@ function LoginPage() {
 
     result = await result.json();
     if (result.success === false){
-      alert(result.message[0])
+      setInValid(true);
+      setMessage(result.message[0]);
     }else{
       let securedToken = bcrypt.hashSync(result.token, salt);
       setCookie("token",securedToken);
@@ -54,7 +57,7 @@ function LoginPage() {
             <input
               name="login"
               type="text"
-              className="shadow appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline"
+              className={isInValid ? invalidClass : normalClass}
               placeholder="Email or Username . . ."
               onChange={onHandleChange}
             />
@@ -64,12 +67,15 @@ function LoginPage() {
             <input
               name="password"
               type="password"
-              className="shadow appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline"
+              className={isInValid ? invalidClass : normalClass}
               placeholder="Password . . ."
               onChange={onHandleChange}
             />
           </div>
-          <div className="w-full flex justify-end mt-5">
+          <div>
+            <p className='text-red-500 italic mt-2'>{message}</p>
+          </div>
+          <div className="w-full flex justify-end mt-3">
             <button
               onClick={onLogin}
               className="h-9 rounded w-1/4 text-stone-100 font-bold cursor-pointer hover:bg-blue-200 bg-gradient-to-l from-violet-900/60 to-rose-500/50">
