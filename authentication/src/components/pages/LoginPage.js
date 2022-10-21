@@ -8,7 +8,7 @@ import { login } from '../../redux/reducers/userReducer';
 function LoginPage() {
   const salt = bcrypt.genSaltSync(10);
   const [userLogin, setUser] = useState({});
-  const [setCookie] = useCookies(['token']);
+  const [cookies,setCookie] = useCookies(['token']);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isInValid, setInValid] = useState(false);
