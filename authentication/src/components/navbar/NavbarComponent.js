@@ -22,7 +22,7 @@ function Navigation() {
     setRegisterActive(true);
   }
   return (
-    <div className="header fixed top-0 left-0 right-0 shadow-md p-5 bg-white flex justify-between z-8">
+    <div className="header fixed top-0 left-0 right-0 shadow-md p-3 bg-white flex justify-between z-8">
       <ul className='text-sky-500 text-lg'>
         <Link to={'/home'}>
           <li onClick={onHomeClick} className={isHomeActive ? activeLink : normalLink}>Home</li>
