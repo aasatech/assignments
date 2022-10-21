@@ -3,6 +3,7 @@ import Navigation from './components/navbar/NavbarComponent';
 import HomePage from './components/pages/HomePage';
 import LoginPage from './components/pages/LoginPage';
 import RegisterPage from './components/pages/RegisterPage';
+import UserHome from './components/pages/UserHome';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path='/home' element={<HomePage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
+          <Route path='/user' element={<UserHome />} />
         </Routes>
       </Router>
     </div>

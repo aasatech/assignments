@@ -30,7 +30,8 @@ function RegisterPage() {
     });
     result = await result.json();
     console.log(result);
-  }
+  };
+  
   return (
     <div className="flex justify-center items-center w-full h-screen">
       <div className="shadow-green-900/80 rounded bg-gradient-to-b from-green-200/80 to-blue-500/20 shadow p-7 bg-white rounded-b w-1/3 m-auto">

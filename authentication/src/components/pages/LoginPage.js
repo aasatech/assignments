@@ -1,19 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/reducers/userReducer';
+
 function LoginPage() {
   const salt = bcrypt.genSaltSync(10);
   const [userLogin, setUser] = useState({});
   const [cookies, setCookie] = useCookies(['token']);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const URL = 'https://learning.staging.aasatech.asia/api/v1/auth/session';
+
   const onHandleChange = (e)=>{
     const name = e.target.name;
     const value = e.target.value;
     setUser((prev)=>{
       return {...prev, [name]: value};
     })
-  }
+  };
+
   const onLogin= async ()=>{
     let result = await fetch(URL,{
       method: 'POST',
@@ -23,15 +31,19 @@ function LoginPage() {
         'Accept': 'application/json'
       }
     });
+
     result = await result.json();
     if (result.success === false){
       alert(result.message[0])
     }else{
       let securedToken = bcrypt.hashSync(result.token, salt);
       setCookie("token",securedToken);
-      alert("Hello: " + cookies.token);
+      setCookie('user', result.data);
+      dispatch(login(result.data));
+      navigate(`/user`);
     }
-  }
+  };
+
   return (
     <div className="flex justify-center items-center w-full h-screen">
       <div className="shadow-green-900/80 rounded bg-gradient-to-b from-green-200/80 to-blue-500/20 shadow p-7 bg-white rounded-b w-1/3 m-auto">
