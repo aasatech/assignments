@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import '../../index.css';
 function Navigation() {
   const [isHomeActive, setHomeActive] = useState(false);
   const [isLoginActive, setLoginActive] = useState(false);

@@ -11,59 +11,66 @@ function RegisterPage() {
   const navigate = useNavigate();
   const [newUser, setNewUser] = useState(userForm);
   const URL = 'https://learning.staging.aasatech.asia/api/v1/auth';
-  const [token, setToken] = useState(undefined);
-  const [nameEorror, setNameEorror] = useState('');
-  const [emailEorror, setEmailEorror] = useState('');
-  const [userNameEorror, setUserNameEorror] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const invalidClass = 'w-full px-4 py-2 border border-red-500 rounded outline-none';
-  // const successClass = 'w-full px-4 py-2 border border-green-500 rounded outline-none';
-  const normalClass = 'shadow appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline';
+  const [formErrors, setFormErrors] = useState({});
   const onHandleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setNewUser((prev)=>{
-      return {...prev, [name]: value};
+    setNewUser((prev) => {
+      return { ...prev, [name]: value };
     })
   }
-  const onRegister = async () => {
-    let result = await fetch(URL, {
-      method: 'POST',
-      body: JSON.stringify(newUser),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    });
-    result = await result.json();
-    setToken(result.token);
-    if (token !== undefined){
-      navigate(`/login`);
-    }else{
-      console.log(result);
-      const errors = result.errors;
-      const mail = errors.email;
-      const name = errors.name;
-      const username = errors.username;
-      if (errors){
-        if (newUser.name.length === 0 || name !== undefined){
-          setNameEorror(errors.name[0]);
+  const validate = (values) => {
+    const errors = {};
+    const regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    const uernameRegex = /^[a-z_]+$/;
+    if (!values.name) {
+      errors.name = 'name is required!';
+    } else if (values.name.length < 3) {
+      errors.name = 'name should be at least 3 char!'
+    }
+    if (!values.username) {
+      errors.username = 'username is requeired!';
+    } else if (!uernameRegex.test(values.username)) {
+      errors.username = 'only lowercase or "_" can be use!'
+    }
+    if (!values.phone) {
+      errors.phone = 'phone is required!'
+    }
+    if (!values.email) {
+      errors.email = 'email is required!';
+    } else if (!regexEmail.test(values.email)) {
+      errors.email = 'email is invalid!';
+    }
+    if (!values.password) {
+      errors.password = 'password is required!';
+    } else if (values.password.length < 6) {
+      errors.password = 'password must be more or equal 6 characters.';
+    }
+    return errors;
+  }
+  
+  const onHandleSubmit = async () => {
+    setFormErrors(validate(newUser));
+    if (Object.keys(validate(newUser)).length === 0){
+      let result = await fetch(URL, {
+        method: 'POST',
+        body: JSON.stringify(newUser),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
-        if (newUser.email.length === 0 || mail !== undefined){
-          setEmailEorror(errors.email[0]);
-        }
-        if (newUser.username.length === 0 || username !== undefined){
-          setUserNameEorror(errors.username[0]);
-        }
-        if (newUser.password.length === 0){
-          setPasswordError(errors.password[0]);
-        }
+      });
+      result = await result.json();
+      if (result.token !== undefined) {
+        navigate('/login')
+      }else{
+        setFormErrors(result.errors);
       }
     }
   }
   return (
-    <div className="flex justify-center items-center w-full h-screen">
-      <div className="shadow-green-900/80 rounded bg-gradient-to-b from-green-200/80 to-blue-500/20 shadow p-7 bg-white rounded-b w-1/3 m-auto">
+    <div className="flex justify-center items-center w-full m-auto h-screen p-1">
+      <div className="shadow-lg bg-white p-7 rounded w-98 m-auto">
         <h2 className="text-cyan-900 text-center mb-5 capitalize text-3xl font-bold">Register</h2>
         <div className="w-full">
           <div className="w-full mb-1">
@@ -71,65 +78,66 @@ function RegisterPage() {
             <input
               name="name"
               type="text"
-              className={nameEorror.length > 0 ? invalidClass : normalClass}
+              className='shadow-sm appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline'
               placeholder="Name . . ."
               onChange={onHandleChange}
             />
           </div>
-          <small className='text-red-500 italic'>{nameEorror}</small>
+          <small className='text-red-500'>{formErrors.name}</small>
           <div className="w-full mt-3">
             <label>Username</label>
             <input
               name="username"
               type="text"
-              className={userNameEorror.length > 0 ? invalidClass : normalClass}
+              className='shadow-sm appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline'
               placeholder="Username . . ."
               onChange={onHandleChange}
             />
           </div>
-          <small className='text-red-500 italic'>{userNameEorror}</small>
+          <small className='text-red-500'>{formErrors.username}</small>
           <div className="w-full mt-3">
             <label>Phone</label>
             <input
               name="phone"
               type="text"
-              className="shadow appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline"
+              className="shadow-sm appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline"
               placeholder="Phone . . ."
+              onChange={onHandleChange}
             />
           </div>
+          <small className='text-red-500'>{formErrors.phone}</small>
           <div className="w-full mt-3">
             <label>Email</label>
             <input
               name="email"
               type="email"
-              className={emailEorror.length > 0 ? invalidClass : normalClass}
+              className='shadow-sm appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline'
               placeholder="Email . . ."
               onChange={onHandleChange}
             />
           </div>
-          <small className='text-red-500 italic'>{emailEorror}</small>
+          <small className='text-red-500'>{formErrors.email}</small>
           <div className="w-full mt-3">
             <label>Password</label>
             <input
               name="password"
               type="password"
-              className={passwordError.length > 0 ? invalidClass : normalClass}
               placeholder="Password . . ."
+              className='shadow-sm appearance-none border  rounded w-full px-2 p-2 text-gray-700 leading-tight focus:outline-blue-500 focus:shadow-outline'
               onChange={onHandleChange}
             />
           </div>
-          <small className='text-red-500 italic'>{passwordError}</small>
+          <small className='text-red-500'>{formErrors.password}</small>
           <div className="w-full flex justify-end mt-5">
             <button
-              onClick={onRegister}
-              className="h-9 rounded w-1/4 text-stone-100 font-bold cursor-pointer hover:bg-blue-200 bg-gradient-to-l from-violet-900/60 to-rose-500/50">
+              onClick={onHandleSubmit}
+              className="rounded font-bold cursor-pointer hover:bg-sky-500 bg-sky-400 text-white px-6 py-2">
               Register
             </button>
           </div>
         </div>
       </div>
     </div>
-
   )
 }
 
